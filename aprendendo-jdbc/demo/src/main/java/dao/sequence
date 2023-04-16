@@ -1,0 +1,45 @@
+--criando sequecia no sql
+create SEQUENCE usersequence
+increment 1
+minvalue 1
+maxvalue 9223372036854775807
+start 5;
+
+--aplicando a sequencia na tabela
+alter table userposjava ALTER column id set default nextval ('usersequence'::regclass);
+
+--selecionando todos os itens da tabela
+select * from userposjava
+
+--criando a tabela
+CREATE TABLE userposjava
+(
+	id bigint NOT NULL,
+	nome character varying(255),
+	email character varying(255),
+	CONSTRAINT user_pk PRIMARY KEY (id)
+)
+WITH (
+	OIDS = FALSE
+);
+ALTER TABLE userposjava
+	OWNER TO postgres;
+
+--inner join
+select nome, numero, email from telefoneuser as fone
+inner join userposjava as userp
+on fone.usuariopessoa = userp.id
+where userp.id = 16
+
+--criando a tabela telefone
+CREATE TABLE telefoneuser(
+	id bigint not null,
+	numero character varying (255) not null,
+	tipo character varying (255) not null,
+	usuariopessoa bigint not null,
+	CONSTRAINT telefone_id PRIMARY key (id)
+);
+
+--relacionando a tabela userposjava e telefoneuser
+ALTER TABLE telefoneuser add foreign key (usuariopessoa) references userposjava (id)
+
